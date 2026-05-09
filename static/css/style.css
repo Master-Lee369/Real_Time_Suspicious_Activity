@@ -1,0 +1,4 @@
+body { background: #f8f9fa; }
+.navbar-brand { font-weight: 600; }
+.card { box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+.table td, .table th { vertical-align: middle; }

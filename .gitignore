@@ -1,0 +1,91 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+myenv/
+.venv/
+
+# Django database
+db.sqlite3
+*.sqlite3
+
+# Django media/uploads
+media/
+uploaded_videos/
+uploads/
+
+# Static collected files
+staticfiles/
+collected_static/
+
+# Environment variables
+.env
+.env.local
+
+# Secret/config files
+*.secret
+secrets.json
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Windows files
+Thumbs.db
+Desktop.ini
+
+# Mac files
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Model files - add later after training
+*.pt
+*.pth
+*.h5
+*.keras
+*.onnx
+*.pkl
+*.joblib
+
+# Dataset folders - add later when downloading datasets
+dataset/
+datasets/
+data/
+raw_data/
+training_data/
+
+# Large video/image files
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.jpg
+*.jpeg
+*.png
+*.bmp
+
+# Except project static images if needed
+!static/images/
+!static/images/*.jpg
+!static/images/*.jpeg
+!static/images/*.png
+
+# Migration cache
+*.pyc
+
+# Jupyter notebooks checkpoint
+.ipynb_checkpoints/
+
+# Temporary files
+tmp/
+temp/
