@@ -43,7 +43,22 @@ class VideoStreamView(LoginRequiredMixin, View):
 
 
 def detection_api(request):
-    return JsonResponse({
-        'status': 'success',
-        'message': 'Detection API working'
-    })
+    # Lazy-import ML wrappers to avoid heavy deps at Django startup.
+    try:
+        from ml.inference.detector import IDDetector
+        from ml.inference.activity_predictor import ActivityPredictor
+
+        id_det = IDDetector()
+        act = ActivityPredictor()
+
+        models_status = {
+            'id_detector': 'loaded' if not id_det.model_missing else 'missing',
+            'activity_model': 'loaded' if not act.model_missing else 'missing'
+        }
+
+        if all(v == 'missing' for v in models_status.values()):
+            return JsonResponse({'status': 'ok', 'message': 'Model not trained yet', 'models': models_status})
+
+        return JsonResponse({'status': 'success', 'message': 'Detection API working', 'models': models_status})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': f'Detection API error: {e}'}, status=500)

@@ -1,91 +1,80 @@
-# Python cache
+# Python
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
 
-# Virtual environment
+# Virtual environments
 venv/
 env/
 myenv/
 .venv/
 
-# Django database
+# Django
 db.sqlite3
 *.sqlite3
-
-# Django media/uploads
 media/
-uploaded_videos/
-uploads/
-
-# Static collected files
 staticfiles/
-collected_static/
+*.log
 
-# Environment variables
+# Environment variables / secrets
 .env
 .env.local
+kaggle.json
+access_token
+.kaggle/
 
-# Secret/config files
-*.secret
-secrets.json
-
-# VS Code
+# IDE
 .vscode/
-
-# PyCharm
 .idea/
 
-# Windows files
+# OS files
+.DS_Store
 Thumbs.db
 Desktop.ini
 
-# Mac files
-.DS_Store
+# Datasets - do not push
+ml/datasets/
+datasets/
+data/
+raw_data/
 
-# Logs
-*.log
-logs/
+# Uploaded files
+uploads/
+uploaded_videos/
 
-# Model files - add later after training
+# YOLOv5 external repo - do not push
+yolov5/
+
+# Training outputs
+runs/
+wandb/
+ml/models/id_card_yolov5/idcard/
+ml/models/id_card_yolov5/**/weights/
+ml/models/**/*.pt
+ml/models/**/*.pth
+ml/models/**/*.onnx
+
+# Large ML models - optional
+# If you want to push only code, keep these ignored
+ml/models/**/*.keras
+ml/models/**/*.h5
+ml/models/**/*.pkl
+ml/models/**/*.joblib
+
+# Model artifact patterns (global)
 *.pt
 *.pth
 *.h5
 *.keras
 *.onnx
-*.pkl
-*.joblib
+*.ckpt
 
-# Dataset folders - add later when downloading datasets
-dataset/
-datasets/
-data/
-raw_data/
-training_data/
+# Reports/images from training
+ml/models/**/training_curves.png
+ml/models/**/confusion_matrix.png
+ml/models/**/metrics.json
 
-# Large video/image files
-*.mp4
-*.avi
-*.mov
-*.mkv
-*.webm
-*.jpg
-*.jpeg
-*.png
-*.bmp
-
-# Except project static images if needed
-!static/images/
-!static/images/*.jpg
-!static/images/*.jpeg
-!static/images/*.png
-
-# Migration cache
-*.pyc
-
-# Jupyter notebooks checkpoint
-.ipynb_checkpoints/
-
-# Temporary files
-tmp/
-temp/
+# Kaggle/token/cache
+.cache/
