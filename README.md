@@ -17,6 +17,30 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
+Environment
+-----------
+Copy `.env.example` to `.env` (or set environment variables) and update values as needed. Example variables include `SECRET_KEY`, email settings, and paths to models.
+
+Run locally (summary)
+---------------------
+1. Create and activate virtualenv
+2. Install dependencies: `pip install -r requirements.txt`
+3. Copy `.env.example` -> `.env` and adjust values
+4. Run migrations and create a superuser:
+
+```powershell
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+5. Start server:
+
+```powershell
+python manage.py runserver
+```
+
+Visit `http://127.0.0.1:8000/`, log in, and explore Dashboard, Upload, Live, and Logs.
+
 Notes:
 - The project uses SQLite for development (`db.sqlite3`). For production, use PostgreSQL and update `RealTimeSecurity/settings.py`.
 - Static files are in `static/`. Media uploads use `media/`.
@@ -88,6 +112,19 @@ Option B — exact YOLOv5 command (requires cloning `https://github.com/ultralyt
 ```bash
 python yolov5/train.py --img 640 --batch 16 --epochs 50 --data ml/datasets/id_card/data.yaml --weights yolov5s.pt --project ml/models/id_card_yolov5 --name idcard --exist-ok
 ```
+
+Continue training / transfer to another machine
+---------------------------------------------
+To continue training or move to another laptop:
+- Copy your `ml/datasets/` folder and the `ml/models/` directory containing checkpoints (e.g. `best.pt` or checkpoints folder) to the other machine (do NOT commit these to GitHub).
+- Ensure Python and required packages are installed (`pip install -r requirements.txt`).
+- If using YOLOv5 training, clone `https://github.com/ultralytics/yolov5` on the target machine and install its requirements listed in `yolov5/requirements.txt`.
+- For activity model training, run `python ml/training/train_activity_lstm.py` on the new machine; ensure `ACTIVITY_MODEL_PATH` and `ACTIVITY_CLASS_NAMES_PATH` environment variables (or file paths) point to the correct locations.
+
+Notes
+-----
+- Datasets and model weights should not be pushed to GitHub — keep them out of the repo and use `.gitignore`.
+- The Django app provides safe checks for missing models; if a model file is absent the UI will show "Model not trained yet" and the app will continue to work.
 
 5. Train activity detector:
 

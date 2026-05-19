@@ -2,43 +2,120 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h2 class="m-0">Dashboard</h2>
+  <div>
+    <a href="{% url 'upload' %}" class="btn btn-outline-light btn-sm me-2">Upload Video</a>
+    <a href="{% url 'stream_page' %}" class="btn btn-outline-light btn-sm me-2">Live Detection</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm me-2">View Logs</a>
+    <a href="/admin/" class="btn btn-outline-warning btn-sm">Admin Panel</a>
+  </div>
 </div>
 
-<div class="row">
-  <div class="col-md-7">
+  <div class="row">
+  <div class="col-md-8">
     <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Live Stream</h5>
-        <div class="ratio ratio-16x9">
-          <img id="stream" src="{% url 'video_feed' %}" class="img-fluid" alt="Live stream">
+      <div class="card bg-dark text-white border-0">
+        <div class="card-body">
+          <div class="hud-title">
+            <span class="dot"></span>
+            <h4 class="mb-0">Live Stream</h4>
+          </div>
+          <div class="mt-2">
+            <span class="pill ok"><span class="icon"></span>Streaming</span>
+            <span class="pill ms-2 warn"><span class="icon"></span>AI Running</span>
+          </div>
+          <img src="{% url 'video_feed' %}" alt="Live stream" style="width:100%; max-height:500px; object-fit:cover;" class="mt-3">
         </div>
       </div>
     </div>
 
+
     <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Your Recent Alerts</h5>
-        <table class="table table-striped mb-0">
-          <thead>
-            <tr><th>Date</th><th>Activity</th><th>Confidence</th></tr>
-          </thead>
-          <tbody>
-          {% for log in logs %}
-            <tr>
-              <td>{{ log.detected_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ log.activity_type }}</td>
-              <td>{{ log.confidence_score|floatformat:2 }}</td>
-            </tr>
-          {% empty %}
-            <tr><td colspan="3">No logs yet.</td></tr>
-          {% endfor %}
-          </tbody>
-        </table>
+      <div class="card-body bg-dark text-light">
+        <h5 class="card-title">Recent Logs</h5>
+        <div class="table-responsive">
+          <table class="table table-dark table-striped mb-0">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Type</th>
+                <th>Confidence</th>
+                <th>Message</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for log in recent_logs %}
+              <tr>
+                <td>{{ log.detected_at|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ log.get_activity_type_display }}</td>
+                <td>{{ log.confidence_score|floatformat:2 }}</td>
+                <td>{{ log.message|default:'-' }}</td>
+                <td>{% if log.activity_type == 'suspicious' %}<span class="text-danger">Alert</span>{% elif log.activity_type == 'id_detected' %}<span class="text-warning">ID</span>{% else %}<span class="text-success">OK</span>{% endif %}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="5">No logs yet.</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="col-md-5">
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Model Status</h5>
+        <ul class="list-unstyled mb-0">
+          <li>Activity Model: <span class="{% if activity_model_available %}text-success{% else %}text-warning{% endif %}">{% if activity_model_available %}Available{% else %}Missing{% endif %}</span></li>
+          <li>Class Names: <span class="{% if class_names_available %}text-success{% else %}text-warning{% endif %}">{% if class_names_available %}Available{% else %}Missing{% endif %}</span></li>
+          <li>ID Card Model: <span class="{% if id_card_model_available %}text-success{% else %}text-warning{% endif %}">{% if id_card_model_available %}Available{% else %}Missing{% endif %}</span></li>
+          <li>SQLite Logs: <span class="text-success">{% if sqlite_logs_working %}Working{% else %}Unavailable{% endif %}</span></li>
+          <li>Upload Detection: <span class="text-success">{% if upload_detection_ready %}Ready{% else %}Not Ready{% endif %}</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body bg-dark text-light">
+        <h5 class="card-title">Summary</h5>
+        <div class="row text-center">
+          <div class="col-6 mb-2">
+            <div class="card bg-secondary text-white">
+              <div class="card-body p-2">
+                <h6>Total Uploads</h6>
+                <strong>{{ total_uploaded_videos }}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-2">
+            <div class="card bg-secondary text-white">
+              <div class="card-body p-2">
+                <h6>Total Logs</h6>
+                <strong>{{ total_logs }}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-2">
+            <div class="card bg-danger text-white">
+              <div class="card-body p-2">
+                <h6>Suspicious Alerts</h6>
+                <strong>{{ suspicious_count }}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-2">
+            <div class="card bg-warning text-dark">
+              <div class="card-body p-2">
+                <h6>ID Detections</h6>
+                <strong>{{ id_card_count }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="card mb-4">
       <div class="card-body">
         <h5 class="card-title">Upload Video for Analysis</h5>
